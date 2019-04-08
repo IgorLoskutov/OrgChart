@@ -1,5 +1,4 @@
 # OrgChart
-Flask, SQLAlchemy, Jinjia2, Postgres, JavaScript
 
 Создайте веб страницу,которая будет выводить иерархию сотрудников в древовидной форме.
 ●

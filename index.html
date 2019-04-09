@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from 'subords.html' import emp_and_subs with context %}
+{% block content %}
+<ul id="myUL">
+
+  <li>
+    <span  id="{{e.id}}" class="caret" onClick="reply_click(this.id)">
+      {{e.full_name}} - {{e.position}}, with us from {{e.work_start}}, salary {{e.salary}}
+    </span>
+    <ul class="nested">
+    {{emp_and_subs(e)}}
+    </ul>
+  </li>
+</ul>
+
+<script>
+
+function reply_click(clicked_id){
+  let clicked = '#' + clicked_id;
+  var nest = $(clicked).parent().children('ul').first();
+
+  $(nest).toggleClass("active");
+  $(clicked).toggleClass("caret-down");
+  if($(nest).hasClass("active")){
+    $(nest).load("?emp_id="+clicked_id);
+  }
+}
+
+</script>
+
+{% endblock %}

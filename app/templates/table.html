@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Our Employees</h2>
+<div style="height:80px">
+  <text>sort by</text>
+    <select>
+      <option onClick="set_sort(this.text)">id</option>
+      <option onClick="set_sort(this.text)">Name</option>
+      <option onClick="set_sort(this.text)">Position</option>
+      <option onClick="set_sort(this.text)">Manager id</option>
+      <option onClick="set_sort(this.text)">Employed</option>
+      <option onClick="set_sort(this.text)">Salary</option>
+    </select>
+    <text>lines per page:</text>
+    <input id="per_page" type="number" name="quantity" min="10" max="50" style="width:50px; color:lightgrey" onChange="set_limit(this.value)">
+    <button id="submit" onClick="submit()">Submit</button>
+</div>
+<table id="Table">
+  <tr class="header">
+    <th style="width:5%;">id</th>
+    <th style="width:16%;">Manager id</th>
+    <th style="width:38%;">Name</th>
+    <th style="width:33%;">Position</th>
+    <th style="width:5%;">Employed</th>
+    <th style="width:5%;">Salary</th>
+  </tr>
+
+
+</table>
+
+<script>
+  var sort = 'id';
+  var limit = 10;
+
+  function set_sort(n){
+    sort = n;
+    console.log(sort);
+  }
+
+  function set_limit(lim){
+    limit = lim;
+    $(this).attr("placeholder", limit);
+    console.log(limit);
+  }
+
+  function submit(){
+    $("Table").load("?limit="+limit+"&"+"sort="+sort);
+    console.log(limit, sort);
+  }
+
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+ <tr class="header">
+    <th style="width:5%;">id</th>
+    <th style="width:16%;">Manager id</th>
+    <th style="width:38%;">Name</th>
+    <th style="width:33%;">Position</th>
+    <th style="width:5%;">Employed</th>
+    <th style="width:5%;">Salary</th>
+  </tr>
+ {% for employee in emps %}
+    <tr>
+      <td>{{employee.id}}</td>
+      <td>{{employee.manager_id}}</td>
+      <td>{{employee.full_name}}</td>
+      <td>{{employee.position}}</td>
+      <td>{{employee.work_start}}</td>
+      <td>{{employee.salary}}</td>
+    </tr>
+  {% endfor %}

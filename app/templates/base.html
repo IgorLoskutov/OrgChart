@@ -21,11 +21,6 @@ ul, #myUL {
   user-select: none;
 }
 
-.loaded
-{
-  value: 0;
-}
-
 .caret::before {
   content: "\25B6";
   color: black;
@@ -45,6 +40,26 @@ ul, #myUL {
 
 .active {
   display: block;
+}
+
+#Table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#Table th, #Table td {
+  text-align: left;
+  padding: 12px;
+}
+
+#Table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#Table tr.header, #Table tr:hover {
+  background-color: #f1f1f1;
 }
 </style>
 </head>

@@ -4,7 +4,7 @@
     {% if not get_subords(sub.id) %}
         <li><span id="{{sub.id}}">{{sub.full_name}} - {{sub.position}}, hired {{sub.work_start}}, salary {{sub.salary}} </span></li>
       {% else %}
-        <li><span id="{{sub.id}}" onClick="reply_click({{sub.id}})" class="caret loaded">{{sub.full_name}} - {{sub.position}},     started career {{sub.work_start}}, salary {{sub.salary}} </span>
+        <li><span id="{{sub.id}}" onClick="reply_click({{sub.id}})" class="caret loaded">{{sub.full_name}} - {{sub.position}},     started career {{sub.work_start}}, salary {{sub.salary}}</span>
             <ul class="nested">
       {% endif %}
       </ul>
@@ -13,5 +13,5 @@
   </li>
 {%- endmacro %}
 
-{# AJAX request to get subordinates call below#}
+{# AJAX request to get subordinates call reply_click() below #}
 {{emp_and_subs(e)}}

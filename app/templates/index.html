@@ -2,7 +2,10 @@
 {% from 'subords.html' import emp_and_subs with context %}
 {% block content %}
 <ul id="myUL">
-  <li><span  id="{{e.id}}" class="caret">{{e.full_name}} - {{e.position}}, with us from {{e.work_start}}, salary {{e.salary}} </span>
+  <li>
+    <span  id="{{e.id}}" class="caret" onClick="reply_click(this.id)">
+      {{e.full_name}} - {{e.position}}, with us from {{e.work_start}}, salary {{e.salary}}
+    </span>
     <ul class="nested">
     {{emp_and_subs(e)}}
     </ul>
@@ -10,23 +13,16 @@
 </ul>
 
 <script>
-togg();
-
-function togg(object='document'){
-  $(object).ready(function() {
-    $(object+",.caret").get(0).addEventListener("click", function(){
-      $(this).parent().children('ul').first().toggleClass("active");
-      $(this).toggleClass("caret-down");
-    },false)
-  });
-}
 
 function reply_click(clicked_id){
-  var clicked = '#' + clicked_id;
+  let clicked = '#' + clicked_id;
+  var nest = $(clicked).parent().children('ul').first();
 
-  $(clicked).parent().children('ul').first().toggleClass("active");
+  $(nest).toggleClass("active");
   $(clicked).toggleClass("caret-down");
-  $(clicked).parent().children('ul').first().load("?emp_id="+clicked_id);
+  if($(nest).hasClass("active")){
+    $(nest).load("?emp_id="+clicked_id);
+  }
 }
 
 </script>

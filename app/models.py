@@ -21,5 +21,5 @@ class Employee(db.Model):
     manager_id = db.Column(db.Integer, index=True)
 
     def __repr__(self):
-        return '''<{1}, id: {0},   pos: {2}>'''.format(
+        return '''<{1}, id: {0}, pos: {2}>'''.format(
             self. id, self.full_name, self.position)

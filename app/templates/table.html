@@ -15,22 +15,22 @@
     <input id="per_page" type="number" name="quantity" min="10" max="50" style="width:50px; color:lightgrey" onChange="set_limit(this.value)">
     <button id="submit" onClick="submit()">Submit</button>
 </div>
-<table id="Table">
-  <tr class="header">
-    <th style="width:5%;">id</th>
-    <th style="width:16%;">Manager id</th>
-    <th style="width:38%;">Name</th>
-    <th style="width:33%;">Position</th>
-    <th style="width:5%;">Employed</th>
-    <th style="width:5%;">Salary</th>
-  </tr>
-
-
-</table>
-
+<div id="Table">
+  <table>
+    <tr class="header">
+      <th style="width:5%;">id</th>
+      <th style="width:16%;">Manager id</th>
+      <th style="width:38%;">Name</th>
+      <th style="width:33%;">Position</th>
+      <th style="width:5%;">Employed</th>
+      <th style="width:5%;">Salary</th>
+    </tr>
+  </table>
+</div>
 <script>
   var sort = 'id';
   var limit = 10;
+  var page;
 
   function set_sort(n){
     sort = n;
@@ -44,9 +44,33 @@
   }
 
   function submit(){
-    $("Table").load("?limit="+limit+"&"+"sort="+sort);
+    $("#Table").load("?limit="+limit+"&"+"sort="+sort);
     console.log(limit, sort);
   }
+
+  function show_page(id) {
+    if(id==='prev_page'&& parseInt(page) != 0) {
+      id = parseInt(page) - 1;
+    }
+
+    if(id==='next_page') {
+      id = parseInt(page) + 1;
+    }
+
+    console.log(id, page);
+
+
+  $("#Table").load("?limit="+limit+"&"+
+          "sort="+sort+"&"+
+          "page="+id
+        );
+    $(document).ajaxComplete(function() {
+      $("#"+page).removeClass("active-page");
+      $("#"+id).addClass("active-page");
+      page = id;
+      });
+  }
+
 
 </script>
 {% endblock %}

@@ -61,6 +61,27 @@ ul, #myUL {
 #Table tr.header, #Table tr:hover {
   background-color: #f1f1f1;
 }
+
+.center {
+  text-align: center;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active-page {
+  background-color: #ddd;
+  color: white;
+}
+
+.pagination a:hover:not(.active-page) {
+  background-color: #ddd;
+}
 </style>
 </head>
 <body>

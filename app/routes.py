@@ -15,9 +15,12 @@ def index():
         subords = Employee().query.filter(Employee.manager_id==i).all()
         return subords
 
-
-    if request.args:
-        e = Employee().query.get(int(request.args['emp_id']))
+    if 'emp_id' in request.args:
+        try:
+            emp_id = int(request.args['emp_id'])
+        except ValueError:
+            pass
+        e = Employee().query.get(emp_id)
         template = 'subords.html'
         print(request.args)
 
@@ -33,7 +36,8 @@ def table():
     template = 'table.html'
     sort_key = 'full_name' #default sort column if not set in request
     limit = 25 #default limit if not set in request
-    offset = 0 #default offset if not set in request
+    offset = 0 #default offset
+    page = 5
 
     sort_keys={
         'id':'id',
@@ -45,15 +49,26 @@ def table():
         }
 
     if request.args:
-        #offset = request.args['offset'] #pagination of the output
-        sort_key=sort_keys[request.args['sort']]
-        limit = offset+int(request.args['limit'])
+        if 'limit' in request.args:
+            limit = int(request.args['limit'])
+        if 'sort' in request.args:
+            sort_key=sort_keys[request.args['sort']]
+        if 'page' in request.args:
+            try:
+                page = int(request.args['page'])
+                offset = (page - 1) * limit #pagination of the output
+            except ValueError:
+                pass
+        limit += offset
         template = 'rows.html'
 
     emps = Employee().query.order_by(sort_key)[offset:limit]
 
+    if page < 4:
+        page = 4
 
     return render_template(
         template,
-        emps = emps
+        emps = emps,
+        page = page
         )

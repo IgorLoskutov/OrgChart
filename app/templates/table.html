@@ -1,28 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Our Employees</h2>
+<h1>Hi, {{ current_user.username }}!</h1>
+<div>
+  <h2>Our Employees</h2>
+  <button class='add-worker' onclick='window.location.href = "new"'> &#43 add employee</button>
+</div>
+
 <div style="height:80px">
   <text>sort by</text>
     <select>
       <option onClick="set_sort(this.text)">id</option>
       <option onClick="set_sort(this.text)">Name</option>
       <option onClick="set_sort(this.text)">Position</option>
-      <option onClick="set_sort(this.text)">Manager id</option>
+      <option onClick="set_sort(this.text)">ManagerID</option>
       <option onClick="set_sort(this.text)">Employed</option>
       <option onClick="set_sort(this.text)">Salary</option>
     </select>
-    <text>lines per page:</text>
-    <input id="per_page" type="number" name="quantity" min="10" max="50" style="width:50px; color:lightgrey" onChange="set_limit(this.value)">
+    <text style="margin-left: 30px">lines per page:</text>
+    <input id="per_page" type="number" name="quantity" min="10" max="50" style="width:50px; color: grey" onChange="set_limit(this.value)">
     <button id="submit" onClick="submit()">Submit</button>
+    <text style="margin-left: 60px">search:</text>
+    <input id="search" type="text" style="width:250px; color: grey; text-align: right" placeholder="search">
 </div>
 <div id="Table">
   <table>
     <tr class="header">
       <th style="width:5%;">id</th>
-      <th style="width:16%;">Manager id</th>
-      <th style="width:38%;">Name</th>
-      <th style="width:33%;">Position</th>
-      <th style="width:5%;">Employed</th>
+      <th style="width:16%;">ManagerID</th>
+      <th style="width:33%;">Name</th>
+      <th style="width:25%;">Position</th>
+      <th style="width:18%;">Employed</th>
       <th style="width:5%;">Salary</th>
     </tr>
   </table>
@@ -32,20 +39,20 @@
   var limit = 10;
   var page;
 
-  function set_sort(n){
-    sort = n;
-    console.log(sort);
+
+  function set_sort(srt){
+    sort = srt;
   }
 
   function set_limit(lim){
     limit = lim;
     $(this).attr("placeholder", limit);
-    console.log(limit);
   }
 
   function submit(){
-    $("#Table").load("?limit="+limit+"&"+"sort="+sort);
-    console.log(limit, sort);
+    $("#Table").load("?limit="+limit+"&"+
+      "sort="+sort+"&"+
+      "find="+$('#search').val());
   }
 
   function show_page(id) {
@@ -57,18 +64,20 @@
       id = parseInt(page) + 1;
     }
 
-    console.log(id, page);
-
-
-  $("#Table").load("?limit="+limit+"&"+
+    $("#Table").load("?limit="+limit+"&"+
           "sort="+sort+"&"+
-          "page="+id
-        );
+          "page="+id+"&"+
+          "find="+$('#search').val()
+          );
+
     $(document).ajaxComplete(function() {
       $("#"+page).removeClass("active-page");
       $("#"+id).addClass("active-page");
       page = id;
       });
+  }
+  function add_one(){
+    $.get('new');
   }
 
 

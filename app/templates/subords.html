@@ -2,9 +2,10 @@
 {% macro emp_and_subs(employee) -%}
   {% for sub in get_subords(employee.id) recursive%}
     {% if not get_subords(sub.id) %}
-        <li><span id="{{sub.id}}">{{sub.full_name}} - {{sub.position}}, hired {{sub.work_start}}, salary {{sub.salary}} </span></li>
+        <li><span id="{{sub.id}}">{{sub.full_name}} - {{sub.position}}</span></li>
+        <ul>
       {% else %}
-        <li><span id="{{sub.id}}" onClick="reply_click({{sub.id}})" class="caret loaded">{{sub.full_name}} - {{sub.position}},     started career {{sub.work_start}}, salary {{sub.salary}}</span>
+        <li><span id="{{sub.id}}" onClick="nest_click({{sub.id}})" class="caret loaded">{{sub.full_name}} - {{sub.position}}</span>
             <ul class="nested">
       {% endif %}
       </ul>
@@ -13,5 +14,5 @@
   </li>
 {%- endmacro %}
 
-{# AJAX request to get subordinates call reply_click() below #}
+{# AJAX request to get subordinates call nest_click() below #}
 {{emp_and_subs(e)}}

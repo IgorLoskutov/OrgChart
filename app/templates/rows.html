@@ -1,10 +1,10 @@
  <table>
   <tr class="header">
     <th style="width:5%;">id</th>
-    <th style="width:16%;">Manager id</th>
-    <th style="width:38%;">Name</th>
-    <th style="width:33%;">Position</th>
-    <th style="width:5%;">Employed</th>
+    <th style="width:16%;">ManagerID</th>
+    <th style="width:35%;">Name</th>
+    <th style="width:25%;">Position</th>
+    <th style="width:15%;">Employed</th>
     <th style="width:5%;">Salary</th>
   </tr>
  {% for employee in emps %}
@@ -28,3 +28,37 @@
   {% endfor %}
     <a id = next_page href="#"onClick="show_page(this.id)">&raquo;</a>
 </div>
+
+<script>
+  $("tr td").dblclick(function(){
+    $(this).html("<input type='text' class='table-input'><button type='button'>delete</button>");
+
+    $(this).children('button').click(function(){
+      $.post('table',
+        {
+          fire:$(this).parent().siblings(0).html()
+        },
+        show_page($('.active-page').attr('id'))
+      );
+    });
+    $(this).children('input').blur(function(){
+      show_page($('.active-page').attr('id'));
+    });
+    $(this).children('input').keyup(function(event){
+      if(event.which == 13){
+        let col_num = $('tr td').index($(this).parent())%$('tr th').length;
+        $.post('table',
+          {
+            update:$(this).val(),
+            id:$(this).parent().siblings(0).html(),
+            field:$('tr th').eq(col_num).text()
+          },
+          function(){
+            show_page($('.active-page').attr('id'));
+          }
+        );
+      };
+    });
+   });
+
+</script>

@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% from 'subords.html' import emp_and_subs with context %}
 {% block content %}
+<h1>Tree View</h1>
+<h2> Here is our structure</h2>
 <ul id="myUL">
   <li>
-    <span  id="{{e.id}}" class="caret" onClick="reply_click(this.id)">
-      {{e.full_name}} - {{e.position}}, with us from {{e.work_start}}, salary {{e.salary}}
+    <span  id="{{e.id}}" class="caret" onClick="nest_click(this.id)">
+      {{e.full_name}} - {{e.position}}
     </span>
     <ul class="nested">
     {{emp_and_subs(e)}}
@@ -13,8 +15,7 @@
 </ul>
 
 <script>
-
-function reply_click(clicked_id){
+function nest_click(clicked_id){
   let clicked = '#' + clicked_id;
   var nest = $(clicked).parent().children('ul').first();
 

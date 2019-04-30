@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from 'subords.html' import emp_and_subs with context %}
+{% block content %}
+<h1>Tree View</h1>
+<h2> Here is our structure</h2>
+
+<ul id="myUL">
+  <li  >
+    <span  id="{{e.id}}" class="caret" onClick="nest_click(this.id)" ondrop="drop(event)" ondragover="allowDrop(event)">
+      {{e.full_name}} - {{e.position}}
+    </span>
+    <ul class="nested">
+    {{emp_and_subs(e)}}
+    </ul>
+  </li>
+</ul>
+
+<script>
+function nest_click(clicked_id){
+  let clicked = '#' + clicked_id;
+  var nest = $(clicked).siblings('ul').first();
+
+  $(nest).toggleClass("active");
+  $(clicked).toggleClass("caret-down");
+  if($(nest).hasClass("active")){
+    $(nest).load("?emp_id="+clicked_id);
+  }
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("id", ev.target.id);
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function reload_subords(manager){
+  $("#"+manager).siblings('ul').load("?emp_id="+manager);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var empl = ev.dataTransfer.getData("id");
+  var man = ev.target.id;
+  var prev_man = $('#'+empl).parent().parent('ul').siblings('span').attr('id');
+  console.log(prev_man);
+  $.post('index',
+        {
+          set_manager_id:{
+            employee: empl,
+            manager: man
+          }
+        },
+        function(){
+          $("#"+prev_man).siblings('ul').load("?emp_id="+prev_man);
+          $("#"+man).siblings('ul').load("?emp_id="+man);
+        }
+      );
+  $("#"+prev_man).siblings('ul').addClass("active");
+  $("#"+man).siblings('ul').addClass("active");
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script  type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<style>
+ul, #myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 5;
+  margin-left: 50px;
+  padding: 0;
+  font-size: 18px;
+}
+
+.caret {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.caret-down::before {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */'
+  transform: rotate(90deg);
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+#Table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#Table th, #Table td {
+  text-align: left;
+  padding: 12px;
+}
+
+#Table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#Table tr.header, #Table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.center {
+  text-align: center;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active-page {
+  background-color: #ddd;
+  color: white;
+}
+
+.pagination a:hover:not(.active-page) {
+  background-color: #ddd;
+}
+
+.nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #555;
+}
+
+.nav li {
+  float: left;
+}
+
+.nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav li a:hover {
+  background-color: #000;
+}
+.table-input{
+  padding: 0;
+  margin:0 ;
+}
+
+.add-worker {
+  border-color: green;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 24px;
+  float: right;
+  margin-right:120px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="logo">
+  </div>
+</div>
+<div id="nav" class="nav">
+  <ul>
+    <li><a href="{{url_for('index')}}"> Home</a></li>
+    <li><a href="{{url_for('table')}}"> Table view</a></li>
+    <li>
+      {% if current_user.is_anonymous %}
+        <a href="{{url_for('login')}}">Login</a>
+      {% else %}
+        <a href="{{url_for('logout')}}">Logout</a>
+    {% endif %}
+  </ul>
+</div>
+ <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    {% block content %}{% endblock %}
+</body>
+</html>

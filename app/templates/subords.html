@@ -2,10 +2,10 @@
 {% macro emp_and_subs(employee) -%}
   {% for sub in get_subords(employee.id) recursive%}
     {% if not get_subords(sub.id) %}
-        <li><span id="{{sub.id}}">{{sub.full_name}} - {{sub.position}}</span></li>
+        <li><span id="{{sub.id}}" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">{{sub.full_name}} - {{sub.position}}</span></li>
         <ul>
       {% else %}
-        <li><span id="{{sub.id}}" onClick="nest_click({{sub.id}})" class="caret loaded">{{sub.full_name}} - {{sub.position}}</span>
+        <li><span id="{{sub.id}}" onClick="nest_click({{sub.id}})" class="caret loaded" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">{{sub.full_name}} - {{sub.position}}</span>
             <ul class="nested">
       {% endif %}
       </ul>
@@ -13,6 +13,7 @@
     </ul>
   </li>
 {%- endmacro %}
+
 
 {# AJAX request to get subordinates call nest_click() below #}
 {{emp_and_subs(e)}}

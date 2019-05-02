@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, request,redirect, url_for
-from app import app, db
-from app.models import Employee, Users
-from app.forms import LoginForm, NewEmployee
-
+from flask import render_template, request,redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
 
 from werkzeug.urls import url_parse
+from werkzeug import secure_filename
+
+from app import app, db
+from app.models import Employee, Users
+from app.forms import LoginForm, NewEmployee
 
 from sqlalchemy import func
 
@@ -15,33 +16,42 @@ from decimal import Decimal
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods = ['POST', 'GET'])
+@login_required
 def index():
-    e = Employee().query.get(0)
+    emp = Employee().query.get(0)
     template = 'index.html'
 
     def get_subords(i):
         subords = Employee().query.filter(Employee.manager_id==i).all()
         return subords
 
-    if 'emp_id' in request.args:
-        try:
-            emp_id = int(request.args['emp_id'])
-        except ValueError:
-            pass
-        e = Employee().query.get(emp_id)
-        template = 'subords.html'
-        print(request.args)
+    if request.method=='GET': 
+        if 'emp_id' in request.args:
+            try:
+                emp_id = int(request.args['emp_id'])
+            except ValueError:
+                pass
+            emp = Employee().query.get(emp_id)
+            template = 'subords.html'
+    if request.method=='POST':
+        '''drag'n'drop changing manager directly in org-tree'''
+        employee_id = int(request.form['set_manager_id[employee]'])
+        new_manager = int(request.form['set_manager_id[manager]'])
+        empl = Employee().query.get(employee_id)
+        empl.manager_id = new_manager
+        db.session.add(empl)
+        db.session.commit()
 
     return render_template(
         template,
-        e=e,
+        e=emp,
         Employee=Employee,
         get_subords=get_subords
         )
 
 @app.route('/table', methods = ['POST', 'GET'])
-#@login_required
+@login_required
 def table():
     template = 'table.html'
     sort_key = 'full_name' #default sort column if not set in request
@@ -111,9 +121,8 @@ def table():
             page = pages
             )
 
-
     if request.method=='POST':
-        print(request.form)
+        '''update employee data from table'''
         if 'update' in request.form:
             field = sort_keys[request.form['field']]
             emp_id = request.form['id']
@@ -136,6 +145,7 @@ def table():
             db.session.add(emp)
             db.session.commit()
         if 'fire' in request.form:
+            '''fire employee'''
             fire = request.form['fire']
             for sub in Employee.query.filter(Employee.manager_id==fire):
                 sub.manager_id = Employee.query.get(fire).manager_id
@@ -145,20 +155,25 @@ def table():
         return('', 204)
 
 @app.route('/new', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def add_new():
     print("/new")
     form = NewEmployee()
     if form.validate_on_submit():
+        filename = None
+        if form.pic.data:
+            filename = str(form.id.data) + secure_filename(form.pic.data.filename)
+            form.pic.data.save('app/static/images'+filename)
         emp = Employee(
                 id=form.id.data,
                 full_name = form.name.data,
                 work_start = form.work_start.data,
                 salary = Decimal(form.salary.data),
                 position = form.position.data,
-                manager_id = form.manager_id.data
+                manager_id = form.manager_id.data,
+                pic = filename
                 )
-        print(emp)
+        print(emp,'pic=',emp.pic)
         db.session.add(emp)
         db.session.commit()
 
@@ -171,7 +186,7 @@ def login():
         return redirect(url_for('table'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(username=form.worusername.data).first()
+        user = Users.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))

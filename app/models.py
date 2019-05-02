@@ -32,6 +32,7 @@ class Employee(db.Model):
     salary = db.Column(db.Numeric(5,2), index=True)
     position = db.Column(db.String(120), index=True)
     manager_id = db.Column(db.Integer, index=True)
+    pic = db.Column(db.String(120), default = '/static/images/default-user-icon-1.jpg')
 
     def __repr__(self):
         return '''<{1}, id: {0}, pos: {2}>'''.format(
@@ -39,4 +40,4 @@ class Employee(db.Model):
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return Users.query.get(int(id))

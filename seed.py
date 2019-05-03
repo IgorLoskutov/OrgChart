@@ -1,11 +1,13 @@
-from seeder import ResolvingSeeder
-from app import app, db
-from app.models import Employee
-import psycopg2, time
-
+import psycopg2
+import time
 import json
 from datetime import *
 import random
+
+from seeder import ResolvingSeeder
+
+from app import app, db
+from app.models import Employee, Users
 
 seeder = ResolvingSeeder(db.session)
 
@@ -14,11 +16,11 @@ try:
 except AttributeError:
     print('AttrErr')
 
-with open('./data_init.json','r') as file:
+with open('./data_init.json', 'r') as file:
     emp = json.loads(file.read())
 
 manager_positions = ['director', 'manager', 'department chief', 'team leader']
-workers = ['driver', 'administrator', 'dispatcher', 'sales', 'controller']
+workers = ['driver', 'administrator', 'dispatcher', 'sales', 'controller', 'assistant']
 
 
 managers = set()
@@ -39,4 +41,9 @@ emp = [{"target_class": "Employee", "data": emp}]
 
 seeder.load_entities_from_data_dict(emp)
 
+usr = Users()
+usr.username = 'one'
+usr.set_password('pass')
+
+db.session.add(usr)
 db.session.commit()

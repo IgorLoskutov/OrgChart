@@ -24,6 +24,7 @@ class Users(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+
 class Employee(db.Model):
     """all employee of organization"""
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +39,7 @@ class Employee(db.Model):
         return '''<{1}, id: {0}, pos: {2}>'''.format(
             self. id, self.full_name, self.position)
 
+
 @login.user_loader
-def load_user(id):
-    return Users.query.get(int(id))
+def load_user(id_):
+    return Users.query.get(int(id_))
